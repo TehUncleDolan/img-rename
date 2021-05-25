@@ -1,0 +1,13 @@
+[package]
+name = "img-rename"
+version = "0.1.0-alpha.0"
+description = "CLI tool remage image files, handles DPR"
+authors = ["Teh Uncle Dolan"]
+license = "BSD-3-Clause"
+edition = "2018"
+readme = "README.md"
+publish = false
+
+[dependencies]
+anyhow = "1.0"
+imagesize = "0.8"
