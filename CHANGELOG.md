@@ -15,6 +15,8 @@ Possible sections are:
 
 ## [Unreleased] - ReleaseDate
 
+## [0.1.0] - 2021-05-25
+
 ### Added
 
 - rename pages (both SP adn DP), starting from 1
