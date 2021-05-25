@@ -15,6 +15,8 @@ Possible sections are:
 
 ## [Unreleased] - ReleaseDate
 
+## [0.1.1] - 2021-05-25
+
 ### Added
 
 - Can specify the starting page through the `PAGE_OFFSET` environment variable
