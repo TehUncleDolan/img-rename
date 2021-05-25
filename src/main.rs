@@ -96,7 +96,7 @@ fn rename_pages() -> Result<()> {
         .context("cannot access page")?;
     entries.sort_by_key(std::fs::DirEntry::path);
 
-    let mut i = 1;
+    let mut i = get_page_offset();
     for entry in entries {
         let path = entry.path();
 
@@ -150,6 +150,14 @@ fn strip_bak_suffix() -> Result<()> {
     }
 
     Ok(())
+}
+
+fn get_page_offset() -> usize {
+    const DEFAULT_PAGE_OFFSET: usize = 1;
+
+    env::var("PAGE_OFFSET")
+        .map(|val| val.parse::<usize>().unwrap_or(DEFAULT_PAGE_OFFSET))
+        .unwrap_or(DEFAULT_PAGE_OFFSET)
 }
 
 fn get_extension_from_filename(filename: &Path) -> Result<&str> {

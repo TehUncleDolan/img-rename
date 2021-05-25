@@ -29,3 +29,6 @@ You can also gives the path to several books:
 ```bash
 img-rename "Tome 01" "Tome 02"
 ```
+
+You can also use the environment variable `PAGE_OFFSET` to control the start
+from page 0 (or another value) instead of 1 (the default).
