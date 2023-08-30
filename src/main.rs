@@ -51,17 +51,8 @@
 
 // }}}
 
-use anyhow::{
-    anyhow,
-    Context,
-    Result,
-};
-use std::{
-    env,
-    ffi::OsStr,
-    fs,
-    path::Path,
-};
+use anyhow::{anyhow, Context, Result};
+use std::{env, ffi::OsStr, fs, path::Path};
 
 fn main() -> Result<()> {
     let wd = env::current_dir().context("failed to get current directory")?;
@@ -69,18 +60,13 @@ fn main() -> Result<()> {
     for book in env::args().skip(1) {
         println!("Renaming page in {}...", book);
 
-        env::set_current_dir(&book)
-            .with_context(|| format!("failed to move into {}", book))?;
+        env::set_current_dir(&book).with_context(|| format!("failed to move into {}", book))?;
 
-        rename_pages()
-            .with_context(|| format!("failed to rename pages in {}", book))?;
+        rename_pages().with_context(|| format!("failed to rename pages in {}", book))?;
 
-        strip_bak_suffix().with_context(|| {
-            format!("failed to strip back suffix in {}", book)
-        })?;
+        strip_bak_suffix().with_context(|| format!("failed to strip back suffix in {}", book))?;
 
-        env::set_current_dir(&wd)
-            .context("failed to go back to the working directory")?;
+        env::set_current_dir(&wd).context("failed to go back to the working directory")?;
     }
 
     Ok(())
@@ -104,14 +90,13 @@ fn rename_pages() -> Result<()> {
             continue;
         }
         match get_extension_from_filename(&path) {
-            Ok("jpg") | Ok("png") | Ok("webp") => (),
+            Ok("jpg") | Ok("png") | Ok("webp") | Ok("jxl") => (),
             _ => continue,
         };
 
         match imagesize::size(&path) {
             Ok(dim) => {
-                let ext = get_extension_from_filename(&path)
-                    .expect("valid extension");
+                let ext = get_extension_from_filename(&path).expect("valid extension");
 
                 let new_name = if dim.height > dim.width {
                     // SP
@@ -124,7 +109,7 @@ fn rename_pages() -> Result<()> {
                 };
 
                 rename(&path, &new_name)?;
-            },
+            }
             Err(err) => eprintln!("Skip {}: {}", path.display(), err),
         }
     }
@@ -144,8 +129,7 @@ fn strip_bak_suffix() -> Result<()> {
             _ => continue,
         };
 
-        let new_name =
-            path.to_str().expect("valid UTF-8").trim_end_matches(".bak");
+        let new_name = path.to_str().expect("valid UTF-8").trim_end_matches(".bak");
         rename(&path, &new_name)?;
     }
 
@@ -161,13 +145,12 @@ fn get_page_offset() -> usize {
 }
 
 fn get_extension_from_filename(filename: &Path) -> Result<&str> {
-    filename.extension().and_then(OsStr::to_str).ok_or_else(|| {
-        anyhow!("cannot get file extension for {}", filename.display())
-    })
+    filename
+        .extension()
+        .and_then(OsStr::to_str)
+        .ok_or_else(|| anyhow!("cannot get file extension for {}", filename.display()))
 }
 
 fn rename(from: &Path, to: &str) -> Result<()> {
-    fs::rename(&from, &to).with_context(|| {
-        format!("failed to rename {} to {}", from.display(), to)
-    })
+    fs::rename(&from, &to).with_context(|| format!("failed to rename {} to {}", from.display(), to))
 }
